@@ -1,0 +1,30 @@
+# LederWorks Client Configuration
+# This configuration includes all LederWorks repositories across different platforms
+
+version: "1.0"
+
+# Include platform-specific configurations
+includes:
+  - "github/lederworks_github.yaml"
+  - "azuredevops/lederworks_azuredevops.yaml"
+
+# Client-specific global settings (these can override or supplement the main config)
+global:
+  # Override base path for LederWorks repositories if needed
+  # basePath: "C:\\Data\\GIT\\LederWorks"
+  tags:
+    lederworks: true
+  labels:
+    - "lederworks"
+  # Client-specific environment variables
+  environment:
+    LEDERWORKS_CLIENT: "true"
+    # Additional client-specific environment variables can be added here
+
+# Client-level repositories (if any exist at this level)
+repositories: []
+
+# Client-specific groups
+groups:
+  # All LederWorks repositories
+  lederworks-all: []

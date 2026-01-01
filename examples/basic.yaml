@@ -1,0 +1,61 @@
+# GoRepos Basic Configuration Example
+# This is a simple configuration for managing a small set of repositories
+
+version: "1.0"
+
+global:
+  basePath: "C:\\Data\\GIT\\Projects"  # Windows path - adjust for your OS
+  workers: 5                          # Moderate parallelism for basic usage
+  timeout: 300s                       # 5 minute timeout
+  environment:
+    GIT_CONFIG_GLOBAL: ""            # Use default git config
+  credentials:
+    sshKeyPath: ""                   # Leave empty to use default SSH key
+    gitCredHelper: ""                # Leave empty to use default git credentials
+
+repositories:
+  # Example personal/learning repositories
+  - name: "learning-go"
+    path: "learning/go-examples"
+    url: "https://github.com/golang/example.git"
+    branch: "master"
+    tags: ["learning", "golang"]
+    commands:
+      status: "git status --porcelain"
+      update: "git pull origin master"
+    
+  - name: "awesome-project"
+    path: "personal/awesome-project"
+    url: "https://github.com/user/awesome-project.git"
+    branch: "main"
+    tags: ["personal", "active"]
+    environment:
+      EDITOR: "code"                # Set VS Code as editor for this repo
+    
+  - name: "documentation"
+    path: "docs/project-docs"
+    url: "https://github.com/user/project-docs.git"
+    branch: "main"
+    tags: ["docs", "maintenance"]
+
+# Groups for convenient batch operations
+groups:
+  active: ["learning-go", "awesome-project"]
+  all: ["learning-go", "awesome-project", "documentation"]
+  learning: ["learning-go"]
+
+# Template system configuration (optional)
+templates:
+  default_readme: |
+    # {{ .Name }}
+    
+    Repository: {{ .URL }}
+    Branch: {{ .Branch }}
+    Local Path: {{ .Path }}
+    
+    ## Quick Start
+    
+    ```bash
+    cd {{ .Path }}
+    # Your project commands here
+    ```

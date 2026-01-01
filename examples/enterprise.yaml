@@ -1,0 +1,177 @@
+# GoRepos Enterprise Configuration Example
+# This example shows a more complex setup for enterprise environments
+
+version: "1.0"
+
+global:
+  basePath: "C:\\Enterprise\\Repositories"
+  workers: 20                        # Higher parallelism for enterprise
+  timeout: 600s                      # 10 minute timeout for large repositories
+  environment:
+    GIT_CONFIG_GLOBAL: "C:\\Enterprise\\.gitconfig"
+    HTTPS_PROXY: ""                  # Set if behind corporate proxy
+    NO_PROXY: "localhost,127.0.0.1,.internal"
+  credentials:
+    sshKeyPath: "C:\\Enterprise\\keys\\deploy_key"
+    gitCredHelper: "manager-core"    # Windows Credential Manager
+    tokenEnvVar: "GITHUB_TOKEN"
+
+repositories:
+  # Microservices
+  - name: "user-service"
+    path: "services/user-service"
+    url: "git@github.com:company/user-service.git"
+    branch: "develop"
+    tags: ["microservice", "backend", "critical"]
+    environment:
+      SERVICE_PORT: "8001"
+    commands:
+      build: "go build -o bin/user-service ./cmd/server"
+      test: "go test -v ./..."
+      lint: "golangci-lint run"
+    
+  - name: "order-service"
+    path: "services/order-service"
+    url: "git@github.com:company/order-service.git"
+    branch: "develop"
+    tags: ["microservice", "backend", "critical"]
+    environment:
+      SERVICE_PORT: "8002"
+    commands:
+      build: "go build -o bin/order-service ./cmd/server"
+      test: "go test -v ./..."
+      
+  - name: "payment-service"
+    path: "services/payment-service"
+    url: "git@github.com:company/payment-service.git"
+    branch: "develop"
+    tags: ["microservice", "backend", "critical", "pci-compliant"]
+    environment:
+      SERVICE_PORT: "8003"
+      
+  # Frontend Applications
+  - name: "web-dashboard"
+    path: "frontend/web-dashboard"
+    url: "git@github.com:company/web-dashboard.git"
+    branch: "develop"
+    tags: ["frontend", "react", "dashboard"]
+    commands:
+      build: "npm run build"
+      test: "npm test"
+      lint: "npm run lint"
+      
+  - name: "mobile-app"
+    path: "mobile/customer-app"
+    url: "git@github.com:company/mobile-app.git"
+    branch: "develop"
+    tags: ["mobile", "react-native"]
+    
+  # Infrastructure
+  - name: "infrastructure"
+    path: "infra/terraform"
+    url: "git@github.com:company/infrastructure.git"
+    branch: "main"
+    tags: ["infrastructure", "terraform", "critical"]
+    commands:
+      plan: "terraform plan"
+      validate: "terraform validate"
+      
+  - name: "kubernetes-configs"
+    path: "infra/k8s"
+    url: "git@github.com:company/k8s-configs.git"
+    branch: "main"
+    tags: ["kubernetes", "infrastructure"]
+    
+  # Documentation and Configuration
+  - name: "api-documentation"
+    path: "docs/api-docs"
+    url: "git@github.com:company/api-documentation.git"
+    branch: "main"
+    tags: ["documentation", "api"]
+    
+  - name: "runbooks"
+    path: "docs/runbooks"
+    url: "git@github.com:company/operational-runbooks.git"
+    branch: "main"
+    tags: ["documentation", "operations"]
+    
+  # Libraries and Shared Components
+  - name: "shared-library"
+    path: "libs/shared-go"
+    url: "git@github.com:company/shared-library.git"
+    branch: "main"
+    tags: ["library", "shared", "golang"]
+    
+  - name: "ui-components"
+    path: "libs/ui-components"
+    url: "git@github.com:company/ui-components.git"
+    branch: "main"
+    tags: ["library", "ui", "react"]
+
+# Enterprise groups for different teams and purposes
+groups:
+  # By team
+  backend-team: ["user-service", "order-service", "payment-service"]
+  frontend-team: ["web-dashboard", "mobile-app", "ui-components"]
+  devops-team: ["infrastructure", "kubernetes-configs"]
+  docs-team: ["api-documentation", "runbooks"]
+  
+  # By environment/deployment
+  production-services: ["user-service", "order-service", "payment-service", "web-dashboard"]
+  infrastructure-all: ["infrastructure", "kubernetes-configs"]
+  libraries: ["shared-library", "ui-components"]
+  
+  # By criticality
+  critical: ["user-service", "order-service", "payment-service", "infrastructure"]
+  non-critical: ["api-documentation", "runbooks", "mobile-app"]
+  
+  # By technology
+  golang: ["user-service", "order-service", "payment-service", "shared-library"]
+  nodejs: ["web-dashboard", "mobile-app", "ui-components"]
+  terraform: ["infrastructure"]
+
+# Enterprise template configurations
+templates:
+  service_readme: |
+    # {{ .Name }}
+    
+    ## Service Information
+    - **Repository**: {{ .URL }}
+    - **Branch**: {{ .Branch }}
+    - **Local Path**: {{ .Path }}
+    - **Tags**: {{ .Tags | join ", " }}
+    
+    ## Development
+    
+    ```bash
+    cd {{ .Path }}
+    # Build
+    {{ .Commands.build | default "make build" }}
+    
+    # Test
+    {{ .Commands.test | default "make test" }}
+    
+    # Lint
+    {{ .Commands.lint | default "make lint" }}
+    ```
+    
+    ## Environment Variables
+    {% for key, value in .Environment.items() %}
+    - `{{ key }}`: {{ value }}
+    {% endfor %}
+    
+  infrastructure_readme: |
+    # {{ .Name }}
+    
+    ## Infrastructure Component
+    - **Repository**: {{ .URL }}
+    - **Branch**: {{ .Branch }}
+    - **Path**: {{ .Path }}
+    
+    ## Deployment
+    
+    ```bash
+    cd {{ .Path }}
+    {{ .Commands.validate | default "terraform validate" }}
+    {{ .Commands.plan | default "terraform plan" }}
+    ```

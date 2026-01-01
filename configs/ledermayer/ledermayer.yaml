@@ -1,0 +1,26 @@
+# Ledermayer Client Configuration
+# This configuration includes all Ledermayer repositories across different platforms
+
+version: "1.0"
+
+# Include platform-specific configurations
+includes:
+  - "github/ledermayer_github.yaml"
+
+# Client-specific global settings
+global:
+  tags:
+    ledermayer: true
+  labels:
+    - "ledermayer"
+  # Client-specific environment variables
+  environment:
+    LEDERMAYER_CLIENT: "true"
+
+# Client-level repositories (if any exist at this level)
+repositories: []
+
+# Client-specific groups
+groups:
+  # All Ledermayer repositories
+  ledermayer-all: []

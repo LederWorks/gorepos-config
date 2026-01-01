@@ -1,0 +1,24 @@
+# LederWorks Terraform Modules AWS Configuration
+
+version: "1.0"
+
+# AWS Terraform modules repositories
+repositories:
+  - name: "lederworks-terraform-aws-vpc"
+    path: "lederworks/terraform/modules/aws/vpc"
+    url: "https://github.com/LederWorks/terraform-aws-vpc.git"
+    branch: "main"
+    tags:
+      project: "terraform"
+      type: "module"
+      provider: "aws"
+      component: "vpc"
+    labels: ["terraform", "aws", "module", "vpc"]
+    commands:
+      validate: "terraform validate"
+      test: "terraform test"
+    disabled: true  # Example repository
+
+# AWS modules groups
+groups:
+  terraform-aws-modules: ["lederworks-terraform-aws-vpc"]

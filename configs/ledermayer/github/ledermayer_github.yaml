@@ -1,0 +1,35 @@
+# Ledermayer GitHub Platform Configuration
+
+version: "1.0"
+
+# Include project-specific configurations
+includes:
+  - "personal/ledermayer_github_personal.yaml"
+
+# Platform-specific global settings
+global:
+  # GitHub-specific environment variables
+  environment:
+    GITHUB_PLATFORM: "true"
+    GIT_CREDENTIAL_HELPER: "manager-core"
+  # Platform-level tags
+  tags:
+    platform: "github"
+  # Platform-level labels
+  labels:
+    - "github"
+
+# Platform-level repositories
+repositories:
+  - name: "ledermayer-github-profile"
+    path: "ledermayer/github/profile"
+    url: "https://github.com/ledermayer/ledermayer.git"
+    branch: "main"
+    tags:
+      type: "profile"
+    labels: ["profile"]
+    disabled: true  # Example repository
+
+# Platform groups
+groups:
+  ledermayer-github: []

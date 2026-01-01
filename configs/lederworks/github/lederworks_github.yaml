@@ -1,0 +1,62 @@
+# LederWorks GitHub Platform Configuration
+# This configuration includes all GitHub repositories for LederWorks
+
+version: "1.0"
+
+# Include project-specific configurations
+includes:
+  - "gorepos/lederworks_github_gorepos.yaml"
+  - "hippodamus/lederworks_github_hippodamus.yaml"
+  - "kosmos/lederworks_github_kosmos.yaml"
+  - "terraform/infra/lederworks_github_terraform_infra.yaml"
+  - "terraform/modules/aws/lederworks_github_terraform_modules_aws.yaml"
+  - "terraform/modules/azurerm/lederworks_github_terraform_modules_azurerm.yaml"
+  - "terraform/modules/databricks/lederworks_github_terraform_modules_databricks.yaml"
+  - "terraform/modules/google/lederworks_github_terraform_modules_google.yaml"
+  - "terraform/modules/oci/lederworks_github_terraform_modules_oci.yaml"
+
+# Platform-specific global settings
+global:
+  # GitHub-specific environment variables
+  environment:
+    GITHUB_PLATFORM: "true"
+    GIT_CREDENTIAL_HELPER: "manager-core"
+  # Platform-level tags
+  tags:
+    platform: "github"
+  # Platform-level labels
+  labels:
+    - "github"
+
+# Platform-level repositories (repositories that don't belong to specific projects)
+repositories:
+  - name: "lederworks-github-general"
+    path: "lederworks/github/general"
+    url: "https://github.com/LederWorks/example-general.git"
+    branch: "main"
+    tags:
+      type: "general"
+    labels: ["general"]
+    disabled: true  # Example repository, disabled for now
+
+# Platform-specific groups
+groups:
+  lederworks-github: []  # Will be populated by included project configs
+  lederworks-terraform: []
+  lederworks-tools: []
+
+# Platform-specific templates
+templates:
+  github_workflow: |
+    name: {{ .Name }} CI
+    on:
+      push:
+        branches: [ {{ .Branch }} ]
+      pull_request:
+        branches: [ {{ .Branch }} ]
+    
+    jobs:
+      test:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v4

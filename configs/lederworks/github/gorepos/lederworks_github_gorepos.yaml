@@ -1,0 +1,49 @@
+# LederWorks GitHub GoRepos Project Configuration
+# All repositories related to the GoRepos project
+
+version: "1.0"
+
+# Project-level repositories
+repositories:
+  - name: "lederworks-gorepos-main"
+    path: "lederworks/github/gorepos/main"
+    url: "https://github.com/LederWorks/gorepos.git"
+    branch: "main"
+    tags:
+      project: "gorepos"
+      language: "golang"
+      type: "tool"
+    labels: ["gorepos", "golang", "tool"]
+    commands:
+      build: "go build ./cmd/gorepos"
+      test: "go test -v ./..."
+      install: "go install ./cmd/gorepos"
+      release: "goreleaser release --snapshot --rm-dist"
+
+  - name: "lederworks-gorepos-config"
+    path: "lederworks/github/gorepos/config"
+    url: "https://github.com/LederWorks/gorepos-config.git"
+    branch: "main"
+    tags:
+      project: "gorepos"
+      type: "config"
+    labels: ["gorepos", "config"]
+
+# Project-specific groups
+groups:
+  gorepos-project: ["lederworks-gorepos-main", "lederworks-gorepos-config"]
+
+# Project-specific templates
+templates:
+  gorepos_project_readme: |
+    # GoRepos Project: {{ .Name }}
+    
+    **Part of**: GoRepos Project (LederWorks)
+    **Repository**: {{ .URL }}
+    **Tags**: {{ .Tags | join(", ") }}
+    
+    ## GoRepos Project Commands
+    
+    {% for cmd_name, cmd_value in .Commands.items() %}
+    - **{{ cmd_name }}**: `{{ cmd_value }}`
+    {% endfor %}

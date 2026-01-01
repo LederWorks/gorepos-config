@@ -1,0 +1,23 @@
+# LederWorks GitHub Terraform Infrastructure Configuration
+
+version: "1.0"
+
+# Terraform infrastructure repositories
+repositories:
+  - name: "lederworks-terraform-infra-main"
+    path: "lederworks/terraform/infra/main"
+    url: "https://github.com/LederWorks/terraform-infra.git"
+    branch: "main"
+    tags:
+      project: "terraform"
+      type: "infrastructure"
+    labels: ["terraform", "infrastructure"]
+    commands:
+      validate: "terraform validate"
+      plan: "terraform plan"
+      apply: "terraform apply"
+    disabled: true  # Example repository
+
+# Terraform-specific groups
+groups:
+  terraform-infra: ["lederworks-terraform-infra-main"]

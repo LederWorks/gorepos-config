@@ -1,0 +1,81 @@
+# GoRepos Configuration Entry Point
+# This file serves as the main configuration file for the gorepos-config repository
+
+version: "1.0"
+
+# Include client-specific configurations
+includes:
+  - "configs/lederworks/lederworks.yaml"
+  - "configs/ledermayer/ledermayer.yaml"
+
+# Global settings for this configuration
+global:
+  basePath: "C:\\Data\\GIT\\gorepos"  # Adjust this path for your setup
+  workers: 8
+  timeout: 300s
+  tags:
+    managed: true
+  labels:
+    - "gorepos-managed"
+  environment:
+    GIT_CONFIG_GLOBAL: ""
+  credentials:
+    sshKeyPath: ""
+    gitCredHelper: ""
+
+repositories:
+  # Example repositories for testing (disabled by default)
+  - name: "hello-world-example"
+    path: "examples/hello-world"
+    url: "https://github.com/octocat/Hello-World.git"
+    branch: "master"
+    tags:
+      type: "test"
+      example: true
+    labels: ["example"]
+    disabled: true
+
+  - name: "spoon-knife-example"
+    path: "examples/spoon-knife"
+    url: "https://github.com/octocat/Spoon-Knife.git"
+    branch: "main"
+    tags:
+      type: "test"
+      managed: false
+    labels: ["example"]
+    disabled: true
+
+# Groups for convenient operations
+groups:
+  # Active development repositories
+  gorepos-managed: []
+  
+  # Testing repositories
+  examples: ["hello-world-example", "spoon-knife-example"]
+
+# Template system configuration
+# Note: Template import feature is planned for future versions
+# templates:
+#   readme: |
+#     # {{ .Name }}
+    
+#     Repository: {{ .URL }}
+#     Branch: {{ .Branch }}
+#     Path: {{ .Path }}
+    
+#     ## Quick Start
+    
+#     ```bash
+#     cd {{ .Path }}
+#     {% for cmd_name, cmd_value in .Commands.items() %}
+#     # {{ cmd_name }}: {{ cmd_value }}
+#     {% endfor %}
+#     ```
+    
+#   service_info: |
+#     # Service: {{ .Name }}
+    
+#     - **URL**: {{ .URL }}
+#     - **Branch**: {{ .Branch }}
+#     - **Tags**: {{ .Tags | join(", ") }}
+#     - **Active**: {{ not .Disabled }}

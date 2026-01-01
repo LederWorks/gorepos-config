@@ -1,0 +1,59 @@
+# {{ name }}
+
+{% if description %}
+{{ description }}
+{% endif %}
+
+## Repository Information
+
+- **Repository URL**: {{ url }}
+- **Primary Branch**: {{ branch | default('main') }}
+- **Local Path**: {{ path }}
+- **Tags**: {% if tags %}{{ tags | join(', ') }}{% else %}None{% endif %}
+
+## Getting Started
+
+```bash
+# Clone the repository
+git clone {{ url }} {{ path }}
+cd {{ path }}
+
+{% if branch != 'main' and branch != 'master' %}
+# Switch to the correct branch
+git checkout {{ branch }}
+{% endif %}
+
+{% if commands.build %}
+# Build the project
+{{ commands.build }}
+{% endif %}
+
+{% if commands.test %}
+# Run tests
+{{ commands.test }}
+{% endif %}
+```
+
+## Development Commands
+
+{% for cmd_name, cmd_value in commands.items() %}
+- **{{ cmd_name }}**: `{{ cmd_value }}`
+{% endfor %}
+
+{% if environment %}
+## Environment Variables
+
+{% for key, value in environment.items() %}
+- `{{ key }}`: {{ value }}
+{% endfor %}
+{% endif %}
+
+## Additional Information
+
+- **Repository managed by**: GoRepos
+- **Configuration**: Part of {{ config_name | default('default') }} configuration
+- **Last generated**: {{ timestamp | default('Unknown') }}
+
+---
+
+*This README was automatically generated from the GoRepos configuration.*

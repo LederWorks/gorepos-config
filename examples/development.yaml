@@ -1,0 +1,94 @@
+# GoRepos Development Environment Configuration
+# Optimized for development workflows with faster operations
+
+version: "1.0"
+
+global:
+  basePath: "C:\\Dev\\Workspace"
+  workers: 8                         # Balanced for development machine
+  timeout: 180s                      # Shorter timeout for dev
+  environment:
+    GIT_CONFIG_GLOBAL: ""
+    GOPROXY: "https://proxy.golang.org,direct"
+    GOSUMDB: "sum.golang.org"
+  credentials:
+    sshKeyPath: ""
+    gitCredHelper: ""
+
+repositories:
+  # Current active development repositories
+  - name: "gorepos"
+    path: "tools/gorepos"
+    url: "https://github.com/LederWorks/gorepos.git"
+    branch: "main"
+    tags: ["active", "golang", "tool"]
+    commands:
+      build: "go build ./cmd/gorepos"
+      test: "go test -v ./..."
+      install: "go install ./cmd/gorepos"
+    
+  - name: "gorepos-config"
+    path: "tools/gorepos-config"
+    url: "https://github.com/LederWorks/gorepos-config.git"
+    branch: "main"
+    tags: ["active", "config"]
+    
+  # Experimental projects
+  - name: "experiment-ai"
+    path: "experiments/ai-project"
+    url: "https://github.com/user/ai-experiment.git"
+    branch: "main"
+    tags: ["experiment", "ai", "python"]
+    disabled: true  # Disabled while not actively working on it
+    
+  # Learning repositories
+  - name: "golang-patterns"
+    path: "learning/design-patterns-go"
+    url: "https://github.com/user/golang-patterns.git"
+    branch: "main"
+    tags: ["learning", "golang", "patterns"]
+    
+  # Side projects
+  - name: "personal-website"
+    path: "personal/website"
+    url: "https://github.com/user/personal-website.git"
+    branch: "main"
+    tags: ["personal", "web", "hugo"]
+
+groups:
+  # Development workflow groups
+  current: ["gorepos", "gorepos-config"]
+  learning: ["golang-patterns"]
+  personal: ["personal-website"]
+  experimental: ["experiment-ai"]
+  
+  # Technology groups
+  golang: ["gorepos", "golang-patterns"]
+  web: ["personal-website"]
+  config: ["gorepos-config"]
+
+# Development-focused templates
+templates:
+  dev_readme: |
+    # {{ .Name }}
+    
+    **Development Repository**
+    
+    - Repository: {{ .URL }}
+    - Branch: {{ .Branch }}
+    - Local: {{ .Path }}
+    
+    ## Quick Commands
+    {% if .Commands.build %}
+    - Build: `{{ .Commands.build }}`
+    {% endif %}
+    {% if .Commands.test %}
+    - Test: `{{ .Commands.test }}`
+    {% endif %}
+    {% if .Commands.install %}
+    - Install: `{{ .Commands.install }}`
+    {% endif %}
+    
+    ## Development Notes
+    - Tags: {{ .Tags | join ", " }}
+    - Last updated: {{ .LastUpdate | default "Never" }}

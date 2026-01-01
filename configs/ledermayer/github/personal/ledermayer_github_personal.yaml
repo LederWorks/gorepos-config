@@ -1,0 +1,32 @@
+# Ledermayer Personal GitHub Projects
+
+version: "1.0"
+
+# Personal repositories
+repositories:
+  - name: "ledermayer-personal-website"
+    path: "ledermayer/personal/website"
+    url: "https://github.com/ledermayer/personal-website.git"
+    branch: "main"
+    tags:
+      type: "personal"
+      category: "website"
+    labels: ["personal", "website"]
+    commands:
+      build: "hugo build"
+      serve: "hugo serve"
+    disabled: true  # Example repository
+
+  - name: "ledermayer-personal-scripts"
+    path: "ledermayer/personal/scripts"
+    url: "https://github.com/ledermayer/scripts.git"
+    branch: "main"
+    tags:
+      type: "personal"
+      category: "scripts"
+    labels: ["personal", "scripts"]
+    disabled: true  # Example repository
+
+# Personal project groups
+groups:
+  ledermayer-personal: ["ledermayer-personal-website", "ledermayer-personal-scripts"]

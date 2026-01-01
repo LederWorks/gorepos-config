@@ -1,0 +1,39 @@
+# LederWorks Azure DevOps Platform Configuration
+# This configuration includes all Azure DevOps repositories for LederWorks
+
+version: "1.0"
+
+# Include project-specific configurations
+includes:
+  - "src/lederworks_azuredevops_src.yaml"
+  - "tfm/lederworks_azuredevops_tfm.yaml"
+  - "works/lederworks_azuredevops_works.yaml"
+
+# Platform-specific global settings
+global:
+  # Azure DevOps-specific environment variables
+  environment:
+    AZUREDEVOPS_PLATFORM: "true"
+    AZURE_DEVOPS_EXT_PAT: ""
+
+# Platform-level repositories (repositories that don't belong to specific projects)
+repositories: []
+
+# Platform-specific groups
+groups:
+  lederworks-azuredevops: []  # Will be populated by included project configs
+
+# Platform-specific templates
+templates:
+  azuredevops_pipeline: |
+    trigger:
+    - {{ .Branch }}
+    
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+    - task: UseDotNet@2
+      displayName: 'Use .NET Core SDK'
+      inputs:
+        version: '8.x'
